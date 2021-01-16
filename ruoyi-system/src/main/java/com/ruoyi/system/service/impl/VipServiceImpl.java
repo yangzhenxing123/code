@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.domain.Record;
 import com.ruoyi.system.util.TokenService1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,11 @@ public class VipServiceImpl implements IVipService
 {
     @Autowired
     private VipMapper vipMapper;
+
+    @Autowired
+    private RecordServiceImpl recordService;
+
+
 
     /**
      * 查询vip
@@ -64,6 +70,13 @@ public class VipServiceImpl implements IVipService
         vip.setCreateUserId(loginUser.getUser().getUserId().toString());
         vip.setCreateTime(DateUtils.getNowDate());
         vip.setId(UUID.randomUUID().toString());
+        Record record =new Record();
+        record.setVipId(vip.getId());
+        record.setMoney(vip.getMoney());
+        record.setPhone(vip.getPhone());
+        record.setCreateUserId(vip.getCreateUserId());
+        record.setCreateUserName(vip.getCreateUserName());
+        recordService.insertRecord(record);
         return vipMapper.insertVip(vip);
     }
 
@@ -76,6 +89,13 @@ public class VipServiceImpl implements IVipService
     @Override
     public int updateVip(Vip vip)
     {
+        Record record =new Record();
+        record.setVipId(vip.getId());
+        record.setMoney(vip.getMoney());
+        record.setPhone(vip.getPhone());
+        record.setCreateUserId(vip.getCreateUserId());
+        record.setCreateUserName(vip.getCreateUserName());
+        recordService.insertRecord(record);
         return vipMapper.updateVip(vip);
     }
 

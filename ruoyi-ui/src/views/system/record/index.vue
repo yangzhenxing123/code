@@ -10,7 +10,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -24,7 +23,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:vip:add']"
+          v-hasPermi="['system:record:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -34,7 +33,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:vip:edit']"
+          v-hasPermi="['system:record:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -44,7 +43,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:vip:remove']"
+          v-hasPermi="['system:record:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -53,21 +52,22 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:vip:export']"
+          v-hasPermi="['system:record:export']"
         >导出</el-button>
       </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="vipList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="recordList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="消费记录ID" align="center" prop="id" />
+      <el-table-column label="会员id" align="center" prop="vipId" />
       <el-table-column label="电话" align="center" prop="phone" />
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="余额" align="center" prop="money" />
-      <el-table-column label="创建人" align="center" prop="createUserName" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
-
-      </el-table-column>
+      <el-table-column label="创建人id" align="center" prop="createUserId" />
+      <el-table-column label="创建人姓名" align="center" prop="createUserName" />
+      <el-table-column label="创建时间" align="center" prop="createTime" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -75,14 +75,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:vip:edit']"
+            v-hasPermi="['system:record:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:vip:remove']"
+            v-hasPermi="['system:record:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -96,9 +96,12 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改vip对话框 -->
+    <!-- 添加或修改消费记录对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="会员id" prop="vipId">
+          <el-input v-model="form.vipId" placeholder="请输入会员id" />
+        </el-form-item>
         <el-form-item label="电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入电话" />
         </el-form-item>
@@ -108,8 +111,11 @@
         <el-form-item label="余额" prop="money">
           <el-input v-model="form.money" placeholder="请输入余额" />
         </el-form-item>
-        <el-form-item label="创建人" prop="createUserName">
-          <el-input v-model="form.createUserName" placeholder="请输入创建人" />
+        <el-form-item label="创建人id" prop="createUserId">
+          <el-input v-model="form.createUserId" placeholder="请输入创建人id" />
+        </el-form-item>
+        <el-form-item label="创建人姓名" prop="createUserName">
+          <el-input v-model="form.createUserName" placeholder="请输入创建人姓名" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -121,10 +127,10 @@
 </template>
 
 <script>
-import { listVip, getVip, delVip, addVip, updateVip, exportVip } from "@/api/system/vip";
+import { listRecord, getRecord, delRecord, addRecord, updateRecord, exportRecord } from "@/api/system/record";
 
 export default {
-  name: "Vip",
+  name: "Record",
   components: {
   },
   data() {
@@ -141,8 +147,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // vip表格数据
-      vipList: [],
+      // 消费记录表格数据
+      recordList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -152,21 +158,11 @@ export default {
         pageNum: 1,
         pageSize: 10,
         phone: null,
-        name: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        phone: [
-          { required: true, message: "电话不能为空", trigger: "blur" }
-        ],
-        name: [
-          { required: true, message: "姓名不能为空", trigger: "blur" }
-        ],
-        money: [
-          { required: true, message: "余额不能为空", trigger: "blur" }
-        ],
       }
     };
   },
@@ -174,11 +170,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询vip列表 */
+    /** 查询消费记录列表 */
     getList() {
       this.loading = true;
-      listVip(this.queryParams).then(response => {
-        this.vipList = response.rows;
+      listRecord(this.queryParams).then(response => {
+        this.recordList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -192,6 +188,7 @@ export default {
     reset() {
       this.form = {
         id: null,
+        vipId: null,
         phone: null,
         name: null,
         money: null,
@@ -221,16 +218,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加vip";
+      this.title = "添加消费记录";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getVip(id).then(response => {
+      getRecord(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改vip";
+        this.title = "修改消费记录";
       });
     },
     /** 提交按钮 */
@@ -238,13 +235,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateVip(this.form).then(response => {
+            updateRecord(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addVip(this.form).then(response => {
+            addRecord(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -256,12 +253,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除vip编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除消费记录编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delVip(ids);
+          return delRecord(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -270,12 +267,12 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有vip数据项?', "警告", {
+      this.$confirm('是否确认导出所有消费记录数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return exportVip(queryParams);
+          return exportRecord(queryParams);
         }).then(response => {
           this.download(response.msg);
         })

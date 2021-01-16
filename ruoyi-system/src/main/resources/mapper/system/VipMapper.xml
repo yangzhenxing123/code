@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.VipMapper">
+    
+    <resultMap type="Vip" id="VipResult">
+        <result property="id"    column="id"    />
+        <result property="phone"    column="phone"    />
+        <result property="name"    column="name"    />
+        <result property="money"    column="money"    />
+        <result property="createUserId"    column="create_user_id"    />
+        <result property="createUserName"    column="create_user_name"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectVipVo">
+        select id, phone, name, money, create_user_id, create_user_name, create_time from vip
+    </sql>
+
+    <select id="selectVipList" parameterType="Vip" resultMap="VipResult">
+        <include refid="selectVipVo"/>
+        <where>  
+            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectVipById" parameterType="String" resultMap="VipResult">
+        <include refid="selectVipVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVip" parameterType="Vip">
+        insert into vip
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="money != null and money != ''">money,</if>
+            <if test="createUserId != null">create_user_id,</if>
+            <if test="createUserName != null">create_user_name,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="money != null and money != ''">#{money},</if>
+            <if test="createUserId != null">#{createUserId},</if>
+            <if test="createUserName != null">#{createUserName},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVip" parameterType="Vip">
+        update vip
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="money != null and money != ''">money = #{money},</if>
+            <if test="createUserId != null">create_user_id = #{createUserId},</if>
+            <if test="createUserName != null">create_user_name = #{createUserName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVipById" parameterType="String">
+        delete from vip where id = #{id}
+    </delete>
+
+    <delete id="deleteVipByIds" parameterType="String">
+        delete from vip where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

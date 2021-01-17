@@ -23,6 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectRecordVo"/>
         <where>  
             <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="vipId != null  and vipId != ''"> and vip_id = #{vipId}</if>
         </where>
     </select>
     

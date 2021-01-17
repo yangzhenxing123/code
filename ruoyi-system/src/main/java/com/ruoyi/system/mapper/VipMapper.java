@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import java.util.List;
 import com.ruoyi.system.domain.Vip;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * vipMapper接口
@@ -58,4 +59,12 @@ public interface VipMapper
      * @return 结果
      */
     public int deleteVipByIds(String[] ids);
+
+    /**
+     * 手机号查重
+     * @param phone
+     * @param createUserId
+     * @return
+     */
+    int selectPhone(@Param("phone") String phone,@Param("createUserId") String createUserId);
 }

@@ -122,4 +122,19 @@ public class VipServiceImpl implements IVipService
     {
         return vipMapper.deleteVipById(id);
     }
+
+    /**
+     * 手机号查重
+     * @param phone
+     * @return
+     */
+    @Override
+    public Boolean selectPhone(String phone) {
+        LoginUser loginUser = SpringUtils.getBean(TokenService1.class).getLoginUser(ServletUtils.getRequest());
+        int count=vipMapper.selectPhone(phone,loginUser.getUser().getUserId().toString());
+        if (count==0){
+            return true;
+        }
+        else return false;
+    }
 }

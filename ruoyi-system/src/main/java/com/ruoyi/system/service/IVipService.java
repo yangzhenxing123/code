@@ -58,4 +58,11 @@ public interface IVipService
      * @return 结果
      */
     public int deleteVipById(String id);
+
+    /**
+     * 手机号查重
+     * @param phone
+     * @return
+     */
+    Boolean selectPhone(String phone);
 }

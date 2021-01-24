@@ -74,6 +74,7 @@ public class VipServiceImpl implements IVipService
         record.setVipId(vip.getId());
         record.setMoney(vip.getMoney());
         record.setPhone(vip.getPhone());
+        record.setName(vip.getName());
         record.setCreateUserId(vip.getCreateUserId());
         record.setCreateUserName(vip.getCreateUserName());
         recordService.insertRecord(record);
@@ -95,6 +96,7 @@ public class VipServiceImpl implements IVipService
         record.setPhone(vip.getPhone());
         record.setCreateUserId(vip.getCreateUserId());
         record.setCreateUserName(vip.getCreateUserName());
+        record.setName(vip.getName());
         recordService.insertRecord(record);
         return vipMapper.updateVip(vip);
     }

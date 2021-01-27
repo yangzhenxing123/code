@@ -36,7 +36,7 @@ public class RecordController extends BaseController
     /**
      * 查询消费记录列表
      */
-    @PreAuthorize("@ss.hasPermi('system:record:list')")
+//    @PreAuthorize("@ss.hasPermi('system:record:list')")
     @GetMapping("/list")
     public TableDataInfo list(Record record)
     {
@@ -48,7 +48,7 @@ public class RecordController extends BaseController
     /**
      * 导出消费记录列表
      */
-    @PreAuthorize("@ss.hasPermi('system:record:export')")
+//    @PreAuthorize("@ss.hasPermi('system:record:export')")
     @Log(title = "消费记录", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(Record record)
@@ -61,7 +61,7 @@ public class RecordController extends BaseController
     /**
      * 获取消费记录详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:record:query')")
+//    @PreAuthorize("@ss.hasPermi('system:record:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id)
     {
@@ -71,7 +71,7 @@ public class RecordController extends BaseController
     /**
      * 新增消费记录
      */
-    @PreAuthorize("@ss.hasPermi('system:record:add')")
+//    @PreAuthorize("@ss.hasPermi('system:record:add')")
     @Log(title = "消费记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Record record)
@@ -82,7 +82,7 @@ public class RecordController extends BaseController
     /**
      * 修改消费记录
      */
-    @PreAuthorize("@ss.hasPermi('system:record:edit')")
+//    @PreAuthorize("@ss.hasPermi('system:record:edit')")
     @Log(title = "消费记录", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Record record)
@@ -93,7 +93,7 @@ public class RecordController extends BaseController
     /**
      * 删除消费记录
      */
-    @PreAuthorize("@ss.hasPermi('system:record:remove')")
+//    @PreAuthorize("@ss.hasPermi('system:record:remove')")
     @Log(title = "消费记录", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids)

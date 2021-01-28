@@ -141,7 +141,7 @@
     />
 
     <!-- 添加或修改vip对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="350px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入电话" />
@@ -261,7 +261,8 @@ export default {
         } else {
           selectPhone({ phone: value }).then((res) => {
             // console.log(res);
-            if (!res.data) {
+            debugger
+            if (!res) {
               callback(new Error("手机号码已存在，请重新输入"));
             } else {
               callback();
@@ -352,7 +353,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除vip编号为"' + ids + '"的数据项?', "警告", {
+      // this.$confirm('是否确认删除vip编号为"' + ids + '"的数据项?', "警告", {
+        this.$confirm('是否确认删除vip?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

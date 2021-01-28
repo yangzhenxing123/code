@@ -111,7 +111,6 @@
               </template>
             </el-table-column>
       <el-table-column label="电话" align="center" prop="phone" />
-      <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="余额" align="center" prop="money">
         <template slot-scope="scope">
           <span
@@ -121,6 +120,7 @@
           >
         </template>
       </el-table-column>
+      <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="创建人" align="center" prop="createUserName" />
       <el-table-column
         label="创建时间"
@@ -395,3 +395,8 @@ export default {
   },
 };
 </script>
+<style>
+  .el-message-box{
+    width:350px;
+  }
+</style>

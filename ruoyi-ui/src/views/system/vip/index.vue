@@ -233,9 +233,10 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        phone: [
-          { required: true, validator: this.isPassportNo, trigger: "blur" },
-        ],
+         phone: [
+           //{ required: true, validator: this.isPassportNo, trigger: "blur" },
+           { required: true, message: "电话不能为空", trigger: "blur" },
+         ],
         name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
         money: [{ required: true, message: "余额不能为空", trigger: "blur" }],
       },

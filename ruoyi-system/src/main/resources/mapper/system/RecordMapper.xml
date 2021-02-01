@@ -25,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
             <if test="vipId != null  and vipId != ''"> and vip_id = #{vipId}</if>
         </where>
+        order by create_time desc
     </select>
     
     <select id="selectRecordById" parameterType="String" resultMap="RecordResult">

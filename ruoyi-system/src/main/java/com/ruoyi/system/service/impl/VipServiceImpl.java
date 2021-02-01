@@ -53,6 +53,8 @@ public class VipServiceImpl implements IVipService
     @Override
     public List<Vip> selectVipList(Vip vip)
     {
+        LoginUser loginUser = SpringUtils.getBean(TokenService1.class).getLoginUser(ServletUtils.getRequest());
+        vip.setCreateUserId(loginUser.getUser().getUserId().toString());
         return vipMapper.selectVipList(vip);
     }
 
